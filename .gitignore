@@ -625,3 +625,5 @@ FodyWeavers.xsd
 # Ignore auto generated files
 Source/Tag_AI_Sandbox/WorldGenerator
 Source/Tag_AI_Sandbox/AIEntity
+Setup/build/*
+tmpRepos
