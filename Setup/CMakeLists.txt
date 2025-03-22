@@ -9,6 +9,13 @@ set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/../Source/Tag_AI_Sandbox")
 
 set(CLONED_DIR "${CMAKE_SOURCE_DIR}/../tmpRepos")
 
+execute_process(
+    COMMAND jq -c ".[]" ../repositories.json
+    OUTPUT_VARIABLE repositories
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+string(REPLACE "\n" ";" repositories "${repositories}")
+
 # Clean tmp file at startup if exist in case stopped midway and run again
 if(EXISTS ${CLONED_DIR})
     message(STATUS "Cleaning old cloned repos")
@@ -29,11 +36,15 @@ macro(clone_repo project_name repo_name)
     endif()
 endmacro()
 
-clone_repo("AIEntity" ${AIENTITY})
-clone_repo("WorldGenerator" ${WORLDGENERATOR})
+foreach(repository IN LISTS repositories)
+    string(JSON name GET "${repository}" name)
+    string(JSON repo GET "${repository}" repo)
+
+    clone_repo("${name}" "${repo}")
+endforeach()
 
 # Copy source files excluding the build script into current project source directory
-function(copy_source repo_name)
+function(copy_source repo_name filter)
     set(SOURCE_DIR "${CLONED_DIR}/${repo_name}/Source/${repo_name}")
     if(EXISTS ${SOURCE_DIR})
         message(STATUS "Copying source from ${repo_name}")
@@ -45,13 +56,48 @@ function(copy_source repo_name)
         endif()
 
         file(COPY ${SOURCE_DIR}/ DESTINATION "${SOURCE_PATH}/${repo_name}" PATTERN "*.Build.cs" EXCLUDE)
+
+        # Find filter items path
+        set(filter_path "${repo_files}")
+        foreach(curr IN LISTS filter)
+            file(GLOB_RECURSE repo_files
+             "${SOURCE_PATH}/${curr}"
+            )
+
+            list(APPEND filter_path "${repo_files}")
+        endforeach()
+
+        # Delete filtered content
+        foreach(path IN LISTS filter_path)
+            message(STATUS "Filtering out: ${path}")
+            file(REMOVE ${path})
+        endforeach()
     else()
         message(WARNING "No repository directory found in ${repo_name}")
     endif()
 endfunction()
 
-copy_source("AIEntity")
-copy_source("WorldGenerator")
+foreach(repository IN LISTS repositories)
+    string(JSON name GET "${repository}" name)
+    string(JSON filter ERROR_VARIABLE not_Found GET "${repository}" filter)
+
+    if (not_Found)
+        set(filter_str "")
+    else()
+        set(filter_str "")
+        string(JSON filter_length ERROR_VARIABLE length_error LENGTH "${repository}" filter)
+
+        foreach(index RANGE 0 ${filter_length}-1)
+            string(JSON filter_item ERROR_VARIABLE item_error GET "${repository}" filter ${index})
+
+            if (NOT item_error)
+                list(APPEND filter_str "${filter_item}")
+            endif()
+        endforeach()
+    endif()
+
+    copy_source("${name}" "${filter_str}")
+endforeach()
 
 # Cleanup temporary directory
 function(clean_dir)
@@ -73,7 +119,7 @@ clean_dir()
 function(api_replacement repo_name)
     string(TOUPPER "${repo_name}_API" repo_api)
 
-    message("Replacing ${repo_api} with TAG_AI_SANDBOX_API in ${repo_name}")
+    message(STATUS "Replacing ${repo_api} with TAG_AI_SANDBOX_API in ${repo_name}")
 
     file(GLOB_RECURSE repo_files
      "${SOURCE_PATH}/${repo_name}/*.h"
@@ -87,7 +133,9 @@ function(api_replacement repo_name)
     endforeach()
 endfunction()
 
-api_replacement("AIEntity")
-api_replacement("WorldGenerator")
+foreach(repository IN LISTS repositories)
+    string(JSON name GET "${repository}" name)
+    api_replacement("${name}")
+endforeach()
 
 message(STATUS "Projects merge completed. Ready to start working.")

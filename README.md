@@ -8,6 +8,7 @@ This project contains the meging of the different repositories for my research.
 - Unreal Engine 5.4.4
 - CMake 3.31.6
 - Git 2.49
+- jq 1.7.1
 
 > [!WARNING]
 > Before running, you are required to run the script in `./Setup`
