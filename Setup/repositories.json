@@ -1,0 +1,17 @@
+[
+    {
+        "name": "AIEntity",
+        "repo": "AI-Entities"
+    },
+
+    {
+        "name": "WorldGenerator",
+        "repo": "Procedural-Generator",
+        "filter": [
+            "WorldGeneratorCharacter.h",
+            "WorldGeneratorCharacter.cpp",
+            "WorldGeneratorGameMode.cpp",
+            "WorldGeneratorGameMode.h"
+        ]
+    }
+]
