@@ -13,5 +13,7 @@ UCLASS()
 class TAG_AI_SANDBOX_API ASandboxGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	ASandboxGameMode();
 };

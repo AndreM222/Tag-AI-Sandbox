@@ -1,7 +1,11 @@
 [
     {
         "name": "AIEntity",
-        "repo": "AI-Entities"
+        "repo": "AI-Entities",
+        "filter": [
+            "AIEntitiesGameMode.h",
+            "AIEntitiesGameMode.cpp"
+        ]
     },
 
     {
