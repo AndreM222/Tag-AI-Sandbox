@@ -10,6 +10,12 @@ This project contains the meging of the different repositories for my research.
 - Git 2.49
 - jq 1.7.1
 
+## Roadmap
+
+- Add UI For interaction using slate.
+- Setup a timer for new generation.
+- Create logs and videos on given moments.
+
 > [!WARNING]
 > Before running, you are required to run the script in `./Setup`
 >
