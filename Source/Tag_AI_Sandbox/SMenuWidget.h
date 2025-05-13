@@ -11,6 +11,16 @@
 class SMenuWidget : public SCompoundWidget
 {
 public:
-	
+	SLATE_BEGIN_ARGS(SMenuWidget) {}
 
+		SLATE_ARGUMENT(TWeakObjectPtr<class ASandboxHUD>, OwningHud)
+		SLATE_ARGUMENT(int32, TotalPawns)
+
+	SLATE_END_ARGS()
+
+	void Construct(const FArguments& args);
+
+	TWeakObjectPtr<class ASandboxHUD> OwningHud;
+
+	virtual bool SupportsKeyboardFocus() const override { return true; };
 };

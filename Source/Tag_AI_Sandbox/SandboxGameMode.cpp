@@ -3,6 +3,8 @@
 
 #include "SandboxGameMode.h"
 
+#include "SandboxHUD.h"
+
 ASandboxGameMode::ASandboxGameMode()
 {
 	// set default pawn class to our Blueprinted character
@@ -11,4 +13,6 @@ ASandboxGameMode::ASandboxGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	HUDClass = ASandboxHUD::StaticClass();
 }
