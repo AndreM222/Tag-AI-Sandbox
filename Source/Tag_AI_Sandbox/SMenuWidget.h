@@ -2,19 +2,17 @@
 
 #pragma once
 
+#include "AIStats.h"
 #include "SlateBasics.h"
 #include "SlateExtras.h"
 
-/**
- * 
- */
 class SMenuWidget : public SCompoundWidget
 {
 public:
 	SLATE_BEGIN_ARGS(SMenuWidget) {}
 
 		SLATE_ARGUMENT(TWeakObjectPtr<class ASandboxHUD>, OwningHud)
-		SLATE_ARGUMENT(int32, TotalPawns)
+		SLATE_ARGUMENT(FGeneralStats, Stats)
 
 	SLATE_END_ARGS()
 
